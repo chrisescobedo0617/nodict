@@ -3,47 +3,64 @@
 Implementation of the NoDict assignment
 """
 
-__author__ = '???'
+__author__ = 'chrisescobedo0617'
 
 
 class Node:
     def __init__(self, key, value=None):
-        self.hash = None
-        self.key = None
-        self.value = None
-        # Your code here
-        return
+        self.hash = hash(key)
+        self.key = key
+        self.value = value
 
     def __repr__(self):
-        # Your code here
-        return
+        return f'{self.__class__.__name__}({self.key}, {self.value})'
 
     def __eq__(self, other):
-        # Your code here
-        return
+        if self.key == other.key:
+            return True
+        else:
+            return False
+
 
 
 class NoDict:
     def __init__(self, num_buckets=10):
-        self.buckets = None
-        # Your code here
+        """instance variables"""
+        self.num_buckets = num_buckets
+        self.buckets = [ [] for _ in range(num_buckets) ]
 
     def __repr__(self):
-        # Your code here
-        return
+        """Return a string representing the NoDict contents."""
+        return '\n'.join([f'{self.__class__.__name__}.{i}:{bucket}' for i, bucket in enumerate(self.buckets)])
 
     def add(self, key, value):
-        # Your code here
-        return
+        """accepts a new key and value, and store it into the NoDict instance"""
+        newNode = Node(key, value)
+        bucket = self.buckets[newNode.hash % self.num_buckets]
+        for k in bucket:
+            if k.__eq__(newNode):
+                bucket.remove(k)     
+        bucket.append(newNode)
+        
 
     def get(self, key):
-        # Your code here
-        return
+        """performs a key-lookup in the NoDict class"""
+        newNode = Node(key)
+        bucket = self.buckets[newNode.hash % self.num_buckets]
+        for k in bucket:
+            if k.__eq__(newNode):
+                return k.value
+        raise KeyError(f'{key} not found')
+
 
     def __getitem__(self, key):
-        # Your code here
-        return
+        """enables square-bracket reading behavior."""
+        return self.get(key)
 
     def __setitem__(self, key, value):
-        # Your code here
-        return
+        """enables square-bracket assignment behavior"""
+        self.add(key,value)
+
+dict1 = NoDict()
+print(dict1.add('chris', 7))
+print(dict1)
